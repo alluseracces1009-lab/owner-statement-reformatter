@@ -501,12 +501,21 @@ def validate(parsed: ParsedExport, tx: pd.DataFrame, totals: Totals) -> list[str
             f"but export ending balance is {ending}.")
 
     # 2. Running balance, row by row
+    # Report only the FIRST row that drifts (later rows inherit the same error).
     running = parsed.opening_balance
+    first_bad, bad_count = None, 0
     for i, r in tx.iterrows():
         running += r["cash_in"] - r["cash_out"]
         if r["balance"] is not None and running != r["balance"]:
-            problems.append(f"Row {i + 1} ({r['description']!r}): running balance "
-                            f"{running} != export balance {r['balance']}.")
+            bad_count += 1
+            if first_bad is None:
+                first_bad = (f"Balance stops matching at row {i + 1} ({r['description']!r}): "
+                             f"expected {running}, export shows {r['balance']}. "
+                             "Check that row's amount.")
+    if first_bad:
+        extra = bad_count - 1
+        problems.append(first_bad + (f" ({extra} later row(s) are off by the same amount.)"
+                                     if extra else ""))
 
     # 3. Report footer totals
     if parsed.report_totals:

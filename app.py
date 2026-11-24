@@ -9,6 +9,7 @@ ui_theme.py. This file only handles upload, user choices, display and downloads.
 from __future__ import annotations
 
 import difflib
+import re
 import hashlib
 from pathlib import Path
 
@@ -23,6 +24,8 @@ NEW_INCOME = "Income → (new category)"
 NEW_EXPENSE = "Expense → (new category)"
 DISTRIBUTION = "Owner distribution (not an expense)"
 CONTRIBUTION = "Owner contribution (not income)"
+CHOOSE = "Choose a category…"
+SAME_LINE = "Category's usual line (default)"
 
 st.set_page_config(page_title="Owner Statement Reformatter", page_icon="📄",
                    layout="centered", initial_sidebar_state="collapsed")
@@ -176,10 +179,30 @@ def category_options(mp: dict) -> tuple[list[str], dict]:
     return labels + [NEW_INCOME, NEW_EXPENSE, DISTRIBUTION, CONTRIBUTION], default_line
 
 
+_GENERIC_WORDS = {"income", "expense", "expenses", "fee", "fees", "other", "general", "and",
+                  "services", "service", "misc", "miscellaneous", "the", "of"}
+
+
+def _words(text: str) -> set[str]:
+    return {w for w in re.split(r"[^a-z0-9]+", text.lower()) if len(w) > 2} - _GENERIC_WORDS
+
+
 def best_guess(gl: str, mp: dict) -> dict | None:
-    """Closest existing mapping entry by name (pure string similarity)."""
+    """Suggest an existing mapping only when we're fairly sure.
+
+    1. Shared meaningful words ("pest services" -> "pest control").
+    2. Otherwise a close spelling match (cutoff 0.8, e.g. typos / plurals).
+    Returns None when unsure, so the user must choose (never a silent wrong guess)."""
     key = core.normalize_gl(gl)
-    match = difflib.get_close_matches(key, list(mp), n=1, cutoff=0.5)
+    words = _words(key)
+    scored = [(len(words & _words(k)), k) for k, r in mp.items() if r.get("summary")]
+    scored = [s for s in scored if s[0] > 0]
+    if scored:
+        best = max(scored, key=lambda s: s[0])
+        if sum(1 for s in scored if s[0] == best[0]) == 1:      # unambiguous winner only
+            return mp[best[1]]
+    match = difflib.get_close_matches(key, [k for k, r in mp.items() if r.get("summary")],
+                                      n=1, cutoff=0.8)
     return mp[match[0]] if match else None
 
 
@@ -190,8 +213,9 @@ with st.container(border=True):
         st.warning(f"{len(unmapped)} account(s) aren't mapped yet. Choose where each one goes; "
                    "you only do this once.")
         labels, default_line = category_options(mapping)
-        line_labels = [f"{n} – {name}" for n, name in core.SCHEDULE_E_LINES.items()]
+        labels = [CHOOSE] + labels
         line_numbers = list(core.SCHEDULE_E_LINES)
+        line_labels = [SAME_LINE] + [f"{n} – {name}" for n, name in core.SCHEDULE_E_LINES.items()]
 
         with st.form("map_accounts", border=False):
             choices = []
@@ -202,37 +226,47 @@ with st.container(border=True):
                 st.markdown(f"**{gl}** · {int(rows.sum())} transaction(s), ${amount:,.2f}")
                 guess = best_guess(gl, mapping)
                 guess_label = (f"{guess['role'].title()} → {guess['summary']}"
-                               if guess and guess.get("summary") else NEW_EXPENSE)
+                               if guess and guess.get("summary") else CHOOSE)
+                if guess_label != CHOOSE:
+                    st.caption(f"Suggestion (from a similar account name): **{guess_label}**. "
+                               "Pick it below if it's right.")
                 a, b, c = st.columns(3)
-                cat = a.selectbox("Statement category", labels,
-                                  index=labels.index(guess_label) if guess_label in labels else 0,
-                                  key=f"cat_{k}")
+                # Always start at "Choose…": a wrong pre-selected guess could silently
+                # put an expense into income, so the user confirms every new account.
+                cat = a.selectbox("Statement category", labels, index=0, key=f"cat_{k}")
                 new_name = b.text_input("New category name (if new)", key=f"new_{k}")
-                dflt = (guess or {}).get("schedule_e") or default_line.get(cat, 19)
-                line = c.selectbox("Schedule E line", line_labels,
-                                   index=line_numbers.index(dflt) if dflt in line_numbers
-                                   else len(line_numbers) - 1,
-                                   key=f"line_{k}")
-                choices.append((gl, cat, new_name.strip(), line_numbers[line_labels.index(line)]))
+                line = c.selectbox("Schedule E line", line_labels, index=0, key=f"line_{k}",
+                                   help="Leave as default to use the category's usual line.")
+                line_no = None if line == SAME_LINE else line_numbers[line_labels.index(line) - 1]
+                choices.append((gl, cat, new_name.strip(), line_no))
                 st.divider()
             submitted = st.form_submit_button("Save these mappings", type="primary")
 
         if submitted:
-            errors = []
-            for gl, cat, new_name, line in choices:
+            errors, pending = [], {}
+            for gl, cat, new_name, line_no in choices:
                 key = core.normalize_gl(gl)
-                if cat == DISTRIBUTION:
-                    mapping[key] = {"role": "distribution"}
+                if cat == CHOOSE:
+                    errors.append(f"Choose a category for **{gl}**.")
+                elif cat == DISTRIBUTION:
+                    pending[key] = {"role": "distribution"}
                 elif cat == CONTRIBUTION:
-                    mapping[key] = {"role": "contribution"}
+                    pending[key] = {"role": "contribution"}
                 else:
                     role = "income" if cat.startswith("Income") else "expense"
-                    summary = new_name if cat in (NEW_INCOME, NEW_EXPENSE) else cat.split("→", 1)[1].strip()
+                    is_new = cat in (NEW_INCOME, NEW_EXPENSE)
+                    summary = new_name if is_new else cat.split("→", 1)[1].strip()
+                    line_final = line_no or (3 if role == "income" and is_new else default_line.get(cat))
                     if not summary:
                         errors.append(f"Enter a new category name for **{gl}**.")
-                        continue
-                    mapping[key] = {"role": role, "summary": summary, "schedule_e": int(line),
-                                    "note_label": key.split(":")[-1]}
+                    elif not line_final:
+                        errors.append(f"Choose a Schedule E line for **{gl}** (new category).")
+                    else:
+                        pending[key] = {"role": role, "summary": summary,
+                                        "schedule_e": int(line_final),
+                                        "note_label": key.split(":")[-1]}
+            if not errors:
+                mapping.update(pending)   # only apply when every row is valid
             if errors:
                 for e in errors:
                     st.error(e)

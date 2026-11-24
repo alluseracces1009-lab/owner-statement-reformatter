@@ -40,3 +40,28 @@ def test_unmapped_account_flow():
 def test_mapping_round_trip():
     text = core.mapping_to_json(core.GL_MAPPING)
     assert core.mapping_from_json(text) == {k: v for k, v in core.GL_MAPPING.items()}
+
+def test_best_guess_is_safe():
+    import importlib, sys
+    m = dict(core.GL_MAPPING)
+    # Reuse the app's helper without running the page.
+    src = open("app.py").read()
+    ns = {}
+    start = src.index("_GENERIC_WORDS"); end = src.index("with st.container(border=True):\n    if not unmapped")
+    exec("import difflib, re\nimport owner_statement as core\n" + src[start:end], ns)
+    g = ns["best_guess"]
+    assert g("6630 Pest Services", m)["summary"] == "Landscaping & Pest Control"
+    assert g("Snow Plowing Contract", m)["summary"] == "Landscaping & Pest Control"
+    assert g("Zzz Unknown Thing", m) is None          # unsure -> user must choose
+
+def test_unmapped_requires_choice_when_unsure():
+    at = AppTest.from_file("app.py", default_timeout=30)
+    m = dict(core.GL_MAPPING); m.pop("licenses & permits")
+    at.session_state["mapping"] = m
+    at.run(); at.button[0].click().run()
+    cat = at.selectbox(key=next(s.key for s in at.selectbox if s.key and s.key.startswith("cat_")))
+    assert cat.value == "Choose a category…"          # never pre-selected
+    next(b for b in at.button if b.label == "Save these mappings").click().run()
+    assert any("Choose a category" in e.value for e in at.error)
+    gen = next(b for b in at.button if b.label == "Generate owner statements")
+    assert gen.disabled                                 # nothing was saved
