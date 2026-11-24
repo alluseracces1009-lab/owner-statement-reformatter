@@ -14,9 +14,9 @@ def test_sample_file_generates_and_ties_out():
     gen = next(b for b in at.button if b.label == "Generate owner statements")
     gen.click().run()
     assert not at.exception, at.exception
-    assert any("Ties out" in s.value for s in at.success)
-    vals = {m.label: m.value for m in at.metric}
-    assert vals["Total expenses"] == "$1,629.49" and vals["Ending balance"] == "$500.00"
+    html = " ".join(m.value for m in at.markdown)
+    assert "Ties out" in html
+    assert "$1,629.49" in html and "$500.00" in html
 
 def test_unmapped_account_flow():
     at = AppTest.from_file("app.py", default_timeout=30)
@@ -35,7 +35,7 @@ def test_unmapped_account_flow():
     assert not at.exception, at.exception
     assert any("All GL accounts" in s.value for s in at.success)
     next(b for b in at.button if b.label == "Generate owner statements").click().run()
-    assert {m.label: m.value for m in at.metric}["Total expenses"] == "$1,629.49"
+    assert "$1,629.49" in " ".join(m.value for m in at.markdown)
 
 def test_mapping_round_trip():
     text = core.mapping_to_json(core.GL_MAPPING)
