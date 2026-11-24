@@ -1,0 +1,25 @@
+Owner Statement - General Ledger Detail (Cash Basis)
+Owner: Dana & Marcus Whitfield
+"Properties: 1418 Maple Ridge Dr - 1418 Maple Ridge Dr, Columbus, OH 43214"
+Period: 10/01/2026 - 10/31/2026
+Date,Property,Unit,Payee / Payer,Type,Reference,GL Account,Description,Cash In,Cash Out,Balance
+10/01/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,,Beginning Balance,,,Beginning Cash Balance,,,500.00
+10/01/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,A,Jordan Ellis,Receipt,RCPT-88213,4100 Rent Income,Rent Income - October 2026,"1,450.00",,"1,950.00"
+10/01/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,A,Jordan Ellis,Receipt,RCPT-88213,4120 Other Income:Pet Rent,Pet Rent - Oct,35.00,,"1,985.00"
+10/03/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,AEP Ohio,Bill Payment,eCheck 20931,6420 Electric,House meter / exterior lights 9/2-10/1,,48.17,"1,936.83"
+10/04/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Columbus Dept of Public Utilities,Bill Payment,eCheck 20944,Utilities:Water/Sewer,Water/sewer Q3 acct ending 7720,,286.55,"1,650.28"
+10/06/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,B,Priya Raman,Receipt,RCPT-88301,Rent Income,Rent - Oct 2026 (rec'd late),"1,395.00",,"3,045.28"
+10/06/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,B,Priya Raman,Receipt,RCPT-88301,4105 - Late Fee Income,Late fee - Oct rent rec'd 10/6,75.00,,"3,120.28"
+10/08/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,A,Jordan Ellis,Receipt,RCPT-88355,4410 Utility Reimbursement,Water billback Q3 - Unit A,62.40,,"3,182.68"
+10/09/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,B,Buckeye Plumbing & Drain LLC,Bill Payment,eCheck 20987,6510 Repairs - Plumbing,Unit B kitchen sink leak + replace garbage disposal (WO #4471),,385.00,"2,797.68"
+10/12/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Green Acres Lawn Care,Bill Payment,eCheck 21012,Landscaping/Snow Removal,Lawn mow x2 + leaf cleanup Oct,,140.00,"2,657.68"
+10/15/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Rumpke Waste,Bill Payment,eCheck 21040,Trash Removal,Trash svc Oct,,64.25,"2,593.43"
+10/17/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Home Depot Pro (PM Card),Bill Payment,CC-1017,6520 Repairs,"Smoke detectors (4) + batteries, Units A & B",,118.62,"2,474.81"
+10/18/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,City of Columbus,Bill Payment,eCheck 21066,Licenses & Permits,Rental registration renewal 2027,,50.00,"2,424.81"
+10/21/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Midwest HVAC Services,Bill Payment,eCheck 21090,Repairs & Maintenance:HVAC,Furnace tune-up both units - seasonal (WO #4502),,179.00,"2,245.81"
+10/22/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,B,Maple Ridge Property Group,Bill Payment,MGT-1022,Maint Coordination Fee,Maint. coordination fee 10% - WO #4471,,38.50,"2,207.31"
+10/25/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Orkin,Bill Payment,eCheck 21118,Pest Control,Quarterly exterior pest treatment,,89.00,"2,118.31"
+10/31/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Maple Ridge Property Group,Management Fee,MGT-1031,6200 Management Fees,Management Fee - 8% of rent collected ($2880.00),,230.40,"1,887.91"
+10/31/2026,1418 Maple Ridge Dr - 1418 Maple Ridge Dr Columbus OH 43214,,Dana & Marcus Whitfield,Owner Distribution,ACH-OD-1031,3200 Owner Distributions,Owner draw - October (balance less $500 reserve),,"1,387.91",500.00
+,,,,,,,Total,"3,017.40","3,017.40",
+,,,,,,,Ending Cash Balance,,,500.00

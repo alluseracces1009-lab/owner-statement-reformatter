@@ -1,0 +1,21 @@
+Schedule E Line,Category,October 2026,Source GL Accounts / Transactions,Notes
+3,Rents received,"3,017.40","4100 Rent Income ($2845.00); 4120 Pet Rent ($35.00); 4105 Late Fee Income ($75.00); 4410 Utility Reimbursement ($62.40)",Utility billbacks and late fees included as rental income
+5,Advertising,0.00,,
+6,Auto and travel,0.00,,
+7,Cleaning and maintenance,408.00,"Landscaping/Snow Removal ($140.00); Pest Control ($89.00); Repairs & Maintenance:HVAC tune-up ($179.00)",Routine/recurring upkeep
+8,Commissions,0.00,,Leasing fees would go here
+9,Insurance,0.00,,Paid directly by owner - not on PM ledger
+10,Legal and other professional fees,0.00,,
+11,Management fees,268.90,"6200 Management Fees ($230.40); Maint Coordination Fee ($38.50)",
+12,Mortgage interest paid to banks,0.00,,From owner's Form 1098 - not on PM ledger
+13,Other interest,0.00,,
+14,Repairs,385.00,6510 Repairs - Plumbing - WO #4471 ($385.00),
+15,Supplies,118.62,6520 Repairs - smoke detectors and batteries ($118.62),
+16,Taxes,0.00,,Property tax paid by owner/escrow - not on PM ledger
+17,Utilities,398.97,"Utilities:Water/Sewer ($286.55); 6420 Electric ($48.17); Trash Removal ($64.25)",
+18,Depreciation expense or depletion,0.00,,CPA calculates
+19,Other,50.00,Licenses & Permits - rental registration ($50.00),
+20,Total expenses,"1,629.49",Sum of lines 5-19,
+21,Net income (loss) before owner-paid items,"1,387.91",Line 3 - Line 20,
+Excluded,Owner distributions,"1,387.91",3200 Owner Distributions,Not income or expense - equity transfer
+Excluded,Operating reserve (beginning/ending),500.00,Beginning/Ending Cash Balance,Balance-sheet item

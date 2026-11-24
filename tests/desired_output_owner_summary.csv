@@ -1,0 +1,19 @@
+Section,Line Item,Amount,Notes
+Header,Owner,,Dana & Marcus Whitfield
+Header,Property,,"1418 Maple Ridge Dr, Columbus, OH 43214 (Duplex, 2 units)"
+Header,Period,,October 2026
+Header,Occupancy,,2 of 2 units occupied
+Balance,Opening Balance,500.00,Operating reserve
+Income,Rent,"2,845.00",Unit A $1450.00 + Unit B $1395.00
+Income,"Other Income (pet rent, late fee, water billback)",172.40,Pet rent $35.00 + late fee $75.00 + water billback $62.40
+Income,Total Income,"3,017.40",
+Expenses,Repairs & Maintenance,682.62,Plumbing $385.00 (WO #4471) + furnace tune-up $179.00 (WO #4502) + smoke detectors $118.62
+Expenses,Utilities,398.97,Water/sewer $286.55 + electric $48.17 + trash $64.25
+Expenses,Landscaping & Pest Control,229.00,Lawn/leaf $140.00 + pest $89.00
+Expenses,Management Fees,268.90,8% management fee $230.40 + maintenance coordination $38.50
+Expenses,Licenses & Permits,50.00,City rental registration renewal
+Expenses,Total Expenses,"1,629.49",
+Result,Net Operating Cash Flow,"1,387.91",Total Income - Total Expenses
+Result,Owner Distribution (ACH 10/31),"1,387.91",
+Balance,Ending Balance,500.00,Reserve maintained
+Notes,Highlights,,Unit B paid 10/6 (late fee collected). Unit B garbage disposal replaced. Seasonal furnace tune-up completed on both units.
