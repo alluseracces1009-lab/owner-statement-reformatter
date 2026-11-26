@@ -521,8 +521,9 @@ def validate(parsed: ParsedExport, tx: pd.DataFrame, totals: Totals) -> list[str
     if parsed.report_totals:
         tin, tout = dsum(tx["cash_in"]), dsum(tx["cash_out"])
         if (tin, tout) != parsed.report_totals:
-            problems.append(f"Footer totals {parsed.report_totals} != summed "
-                            f"cash in/out ({tin}, {tout}).")
+            ti, to = parsed.report_totals
+            problems.append(f"The export's Total row shows {ti:,.2f} in / {to:,.2f} out, but the "
+                            f"rows add up to {tin:,.2f} in / {tout:,.2f} out.")
     return problems
 
 
