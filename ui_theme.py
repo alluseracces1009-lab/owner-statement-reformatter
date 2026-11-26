@@ -178,7 +178,7 @@ def ok_banner(text: str) -> str:
 def footer() -> str:
     return """
 <div class="osr-foot">
-  Files are processed in memory for your session only and are not saved.<br>
+  Files are processed in memory for your session only and are not saved. We count anonymous usage only (no file data).<br>
   Schedule E categories are a starting point. Confirm them with the owner's CPA.
 </div>
 """

@@ -18,6 +18,7 @@ import streamlit as st
 
 import owner_statement as core
 import ui_theme as ui
+from usage import track
 
 SAMPLE_FILE = Path(__file__).parent / "maple_ridge_oct2026_gl_export.csv"
 WALKTHROUGH_URL = "https://www.youtube.com/watch?v=8pOCphcHSV8"
@@ -40,6 +41,11 @@ if "mapping" not in st.session_state:
     st.session_state.mapping = dict(core.GL_MAPPING)
 if "source" not in st.session_state:
     st.session_state.source = None          # (filename, bytes)
+if "bot" in st.query_params:                              # keep-awake job: don't count its visits
+    track = lambda *a, **k: None  # noqa: E731
+if not st.session_state.get("_visit_tracked"):          # one anonymous "visit" per browser session
+    st.session_state._visit_tracked = True
+    track("visit")
 if "results" not in st.session_state:
     st.session_state.results = None         # (summary_df, sched_e_df, totals)
 
@@ -85,6 +91,7 @@ with st.container(border=True):
         if SAMPLE_FILE.exists() and st.button("Try the sample file", width="stretch"):
             st.session_state.source = (SAMPLE_FILE.name, SAMPLE_FILE.read_bytes())
             reset_results()
+            track("sample")
     with c_hint:
         st.caption("No export handy? The sample is a duplex for one month.")
 
@@ -101,6 +108,7 @@ with st.container(border=True):
                         saved.getvalue().decode("utf-8"), base=core.GL_MAPPING)
                     st.session_state.loaded_mapping_sig = sig
                     reset_results()
+                    track("mapping_loaded")
                     st.success("Mapping loaded.")
                 except (ValueError, UnicodeDecodeError) as exc:
                     st.error(f"Couldn't read that mapping file: {exc}")
@@ -121,6 +129,10 @@ with st.container(border=True):
                                   placeholder="e.g. Furnace serviced; Unit B renewed")
 
 if upload is not None:
+    _sig = hashlib.md5(upload.getvalue()).hexdigest()
+    if st.session_state.get("_upload_sig") != _sig:      # count each new file once
+        st.session_state._upload_sig = _sig
+        track("upload")
     st.session_state.source = (upload.name, upload.getvalue())
 
 if st.session_state.source is None:
@@ -277,6 +289,7 @@ with st.container(border=True):
             else:
                 st.session_state.mapping = mapping
                 reset_results()
+                track("mapping_saved")
                 st.rerun()
 
 
@@ -293,7 +306,9 @@ with st.container(border=True):
                  width="stretch"):
         try:
             st.session_state.results = core.build_outputs(parsed, st.session_state.mapping, profile)
+            track("generate_ok")
         except core.ValidationError as exc:
+            track("generate_fail")
             st.session_state.results = None
             st.error("**This export doesn't tie out, so no statement was produced.**")
             for p in exc.problems:
@@ -328,11 +343,11 @@ with st.container(border=True):
             st.dataframe(core.format_money_columns(summary), hide_index=True,
                          width="stretch")
             st.download_button("⬇️ Download owner summary (CSV)", core.to_csv_bytes(summary),
-                               file_name=f"{stem}_owner_summary.csv", mime="text/csv")
+                               file_name=f"{stem}_owner_summary.csv", mime="text/csv", on_click=track, args=("download",))
         with tab2:
             st.dataframe(core.format_money_columns(sched_e), hide_index=True,
                          width="stretch")
             st.download_button("⬇️ Download Schedule E (CSV)", core.to_csv_bytes(sched_e),
-                               file_name=f"{stem}_schedule_e.csv", mime="text/csv")
+                               file_name=f"{stem}_schedule_e.csv", mime="text/csv", on_click=track, args=("download",))
 
 st.markdown(ui.footer(), unsafe_allow_html=True)

@@ -33,6 +33,9 @@ No signup is needed. You can try it first with the included sample file.
   they're being processed.
 - You can delete tenant names, addresses and account numbers before uploading. The tool
   only needs dates, GL accounts, descriptions and amounts.
+- The app counts anonymous usage events (for example "a statement was generated") so we
+  know whether the tool is useful. Only the event name and time are stored: never file
+  contents, amounts, names or IP addresses.
 
 ## Limits
 
