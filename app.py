@@ -20,6 +20,7 @@ import owner_statement as core
 import ui_theme as ui
 
 SAMPLE_FILE = Path(__file__).parent / "maple_ridge_oct2026_gl_export.csv"
+WALKTHROUGH_URL = "https://www.youtube.com/watch?v=8pOCphcHSV8"
 NEW_INCOME = "Income → (new category)"
 NEW_EXPENSE = "Expense → (new category)"
 DISTRIBUTION = "Owner distribution (not an expense)"
@@ -51,6 +52,9 @@ def reset_results():
 # Hero + export instructions
 # -----------------------------------------------------------------------------
 st.markdown(ui.hero(), unsafe_allow_html=True)
+
+with st.expander("▶ Watch how it works (3-minute walkthrough)"):
+    st.video(WALKTHROUGH_URL)
 
 with st.expander("How to export the right report"):
     t_af, t_bd, t_cols = st.tabs(["AppFolio", "Buildium", "Columns needed"])

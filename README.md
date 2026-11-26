@@ -11,6 +11,8 @@ Every result is checked against your export: opening balance + income − expens
 distributions must equal the ending balance, and every running balance must match.
 If anything doesn't tie out to the penny, no statement is produced and the app shows why.
 
+Watch the 3-minute walkthrough: https://www.youtube.com/watch?v=8pOCphcHSV8
+
 ## How to use it
 
 1. In AppFolio or Buildium, run the **Owner Statement** or **General Ledger** report for one

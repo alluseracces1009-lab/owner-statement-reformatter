@@ -90,6 +90,11 @@ def css() -> str:
       background: rgba(255,255,255,.12); border: 1px solid rgba(127,127,127,.3);
   }}
 
+  .osr-watch {{
+      display: inline-block; margin-top: 1.2rem; padding: .6rem 1.1rem; border-radius: 10px;
+      background: #FACC15; color: #0B0B0F !important; font-weight: 700; text-decoration: none !important;
+  }}
+  .osr-watch:hover {{ background: #FDE047; }}
   /* Step headers */
   .osr-step {{ display: flex; align-items: center; gap: .75rem; margin: 1.6rem 0 .6rem; }}
   .osr-num {{
@@ -149,6 +154,7 @@ def hero() -> str:
     <span class="osr-chip">✓ Totals checked to the penny</span>
     <span class="osr-chip">✓ Files not stored</span>
   </div>
+  <a class="osr-watch" href="https://www.youtube.com/watch?v=8pOCphcHSV8" target="_blank" rel="noopener">▶&nbsp; Watch the 3-min walkthrough</a>
 </div>
 """
 
