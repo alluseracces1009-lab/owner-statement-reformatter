@@ -1,0 +1,45 @@
+name: keep-app-awake
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Playwright
+        run: |
+          pip install playwright==1.48.0
+          python -m playwright install --with-deps chromium
+      - name: Visit the app (wake it if asleep)
+        env:
+          APP_URL: https://owner-statement-reformatter.streamlit.app/?bot=1
+        run: |
+          python - <<'PY'
+          import os, time
+          from playwright.sync_api import sync_playwright
+          url = os.environ["APP_URL"]
+          with sync_playwright() as p:
+              page = p.chromium.launch().new_page()
+              page.goto(url, wait_until="domcontentloaded", timeout=60000)
+              time.sleep(8)
+              btn = page.get_by_role("button", name="Yes, get this app back up!")
+              if btn.count() > 0:
+                  print("App was asleep - waking it up")
+                  btn.first.click()
+                  time.sleep(60)
+              else:
+                  print("App is awake")
+              page.goto(url, wait_until="domcontentloaded", timeout=60000)
+              time.sleep(20)
+              print("Page title:", page.title())
+          PY
